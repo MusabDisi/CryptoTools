@@ -2,9 +2,12 @@ package com.dissiapps.crypto.ui.navigation
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.dissiapps.crypto.ui.fgindex.FGIndexViewModel
+import com.dissiapps.cryptotools.ui.fgindex.FearGreedIndexScreen
 
 @Composable
 fun AppNavigationHost(
@@ -18,7 +21,8 @@ fun AppNavigationHost(
             Text(text = "Closings")
         }
         composable(NavigationItem.FearGreedIndexScreenNav.route){
-            Text(text = "Fear greed index")
+            val viewModel = hiltViewModel<FGIndexViewModel>()
+            FearGreedIndexScreen(viewModel = viewModel)
         }
         composable(NavigationItem.CalculatorScreenNav.route){
             Text(text = "calculator")

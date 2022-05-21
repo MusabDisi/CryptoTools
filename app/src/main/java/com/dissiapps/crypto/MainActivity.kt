@@ -15,7 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import com.dissiapps.crypto.ui.navigation.AppNavigationHost
 import com.dissiapps.crypto.ui.navigation.BottomNavigationBar
 import com.dissiapps.crypto.ui.theme.CryptoToolsTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
