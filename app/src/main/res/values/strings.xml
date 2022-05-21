@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Crypto Tools</string>
+    <string name="nav_title_calculator">Calculator</string>
+    <string name="nav_title_closings">Closings</string>
+    <string name="nav_title_index">Index</string>
+    <string name="nav_title_news">News</string>
+</resources>
