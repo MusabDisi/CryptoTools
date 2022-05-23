@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.dissiapps.crypto.ui.closings.ClosingTimesScreen
 import com.dissiapps.crypto.ui.fgindex.FGIndexViewModel
 import com.dissiapps.cryptotools.ui.fgindex.FearGreedIndexScreen
 
@@ -18,7 +19,7 @@ fun AppNavigationHost(
             Text(text = "News")
         }
         composable(NavigationItem.ClosingTimesScreenNav.route){
-            Text(text = "Closings")
+            ClosingTimesScreen()
         }
         composable(NavigationItem.FearGreedIndexScreenNav.route){
             val viewModel = hiltViewModel<FGIndexViewModel>()
