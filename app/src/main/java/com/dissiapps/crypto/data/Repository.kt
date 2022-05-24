@@ -5,7 +5,7 @@ import com.dissiapps.crypto.data.local.AppDatabase
 import com.dissiapps.crypto.data.local.fgindex.FGIndexDao
 import com.dissiapps.crypto.data.local.fgindex.FGIndexModel
 import com.dissiapps.crypto.data.models.fgindex.FGIndexData
-import com.dissiapps.crypto.data.remote.FGIndexApi
+import com.dissiapps.crypto.data.remote.fgindex.FGIndexApi
 import com.dissiapps.crypto.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import java.lang.Exception

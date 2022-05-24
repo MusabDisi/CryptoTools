@@ -1,4 +1,4 @@
-package com.dissiapps.crypto.data.remote
+package com.dissiapps.crypto.data.remote.fgindex
 
 import com.dissiapps.crypto.data.models.fgindex.FGIndexResponse
 import retrofit2.http.GET

@@ -4,7 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.dissiapps.crypto.data.Repository
 import com.dissiapps.crypto.data.local.AppDatabase
-import com.dissiapps.crypto.data.remote.FGIndexApi
+import com.dissiapps.crypto.data.remote.fgindex.FGIndexApi
+import com.dissiapps.crypto.data.remote.news.NewsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,6 +33,21 @@ class AppModule {
             .client(client)
             .build()
             .create(FGIndexApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNewsApi(): NewsApi {
+        val interceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+        return Retrofit.Builder()
+            .baseUrl(NewsApi.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(NewsApi::class.java)
     }
 
     @Provides

@@ -6,17 +6,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.paging.ExperimentalPagingApi
 import com.dissiapps.crypto.ui.closings.ClosingTimesScreen
 import com.dissiapps.crypto.ui.fgindex.FGIndexViewModel
+import com.dissiapps.crypto.ui.news.NewsScreen
+import com.dissiapps.crypto.ui.news.NewsScreenViewModel
 import com.dissiapps.cryptotools.ui.fgindex.FearGreedIndexScreen
 
+@OptIn(ExperimentalPagingApi::class)
 @Composable
 fun AppNavigationHost(
     navigationController: NavHostController
 ){
     NavHost(navController = navigationController, startDestination =  NavigationItem.NewsScreenNav.route) {
         composable(NavigationItem.NewsScreenNav.route){
-            Text(text = "News")
+            NewsScreen()
         }
         composable(NavigationItem.ClosingTimesScreenNav.route){
             ClosingTimesScreen()
