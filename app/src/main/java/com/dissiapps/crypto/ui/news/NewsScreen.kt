@@ -2,6 +2,7 @@ package com.dissiapps.crypto.ui.news
 
 import android.content.Context
 import android.content.Intent
+import android.media.TimedText
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
@@ -17,6 +18,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,7 +37,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import com.dissiapps.crypto.data.models.news.Currency
+import com.dissiapps.crypto.ui.common.MainTitleText
 import com.dissiapps.crypto.ui.theme.OffWhite
+import com.dissiapps.crypto.ui.theme.VeryLightGray
 import com.dissiapps.crypto.ui.theme.Yellow
 
 @ExperimentalPagingApi
@@ -47,6 +53,18 @@ fun NewsScreen(viewModel: NewsScreenViewModel = hiltViewModel()) {
     }
 
     LazyColumn(modifier = Modifier.padding(bottom = 56.dp)) {
+
+        item {
+            MainTitleText(mainText = "Latest News", descText = "Access to the latest crypto news")
+        }
+
+        item {
+            SearchBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp, start = 12.dp, end = 12.dp)
+            )
+        }
 
         items(lazyPagingItems) { item ->
             item ?: return@items
@@ -85,40 +103,54 @@ fun NewsItemPreview() {
     NewsItem(newsResult = newsResult)
 }
 
+@Preview(showBackground = true)
+@Composable
+fun NewsItemPreview2() {
+    val newsResult = NewsModel(
+        currencies = listOf(
+            Currency("BTC", "BTC", "BTC", "something.com"),
+            Currency("ETH", "ETH", "ETH", "something.com"),
+            Currency("DOT", "DOT", "DOT", "something.com"),
+            Currency("MATIC", "MATIC", "MATIC", "something.com")
+        ),
+        id = 10,
+        sourceDomain = "domain.com",
+        title = "title rtyyt",
+        url = "google.com",
+        created_at = ""
+    )
+    NewsItem(newsResult = newsResult)
+}
+
 @Composable
 fun NewsItem(newsResult: NewsModel) {
-    var context:Context? = null
+    var context: Context? = null
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, end = 8.dp, bottom = 8.dp)
+            .padding(start = 16.dp, top = 8.dp, end = 4.dp, bottom = 8.dp)
             .clickable {
                 openUrlInBrowser(context, newsResult.url)
             }
     ) {
         context = LocalContext.current
-        Text(
-            modifier = Modifier.width(60.dp),
-            text = fixTime(newsResult.created_at),
-            color = Color.DarkGray,
-            textAlign = TextAlign.Center,
-            fontSize = 14.sp,
-        )
+
         Column {
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = newsResult.title,
-                maxLines = 2,
+                maxLines = 3,
                 style = MaterialTheme.typography.subtitle1,
                 overflow = TextOverflow.Ellipsis,
-//                fontWeight = FontWeight.Bold
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight(450)
             )
             Row(
                 modifier = Modifier.padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
                 Icon(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier.padding(end = 4.dp),
                     painter = painterResource(id = R.drawable.ic_link_24),
                     tint = Color.Gray,
                     contentDescription = null
@@ -127,23 +159,65 @@ fun NewsItem(newsResult: NewsModel) {
                     text = newsResult.sourceDomain,
                     color = Color.Gray
                 )
+            }
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween) {
                 CoinsRow(
-                    modifier = Modifier.fillMaxWidth(), currencies = newsResult.currencies
+                    modifier = Modifier.wrapContentSize(),
+                    currencies = newsResult.currencies ?: emptyList(),
+                    maxSize = 4,
                 )
+                Text(
+                    modifier = Modifier
+                        .wrapContentWidth()
+                        .padding(start = 2.dp, end = 8.dp),
+                    text = fixTime(newsResult.created_at),
+                    color = Color.DarkGray,
+                    textAlign = TextAlign.Center,
+                    fontSize = 14.sp,
+                )
+//                TimeText(modifier = Modifier.wrapContentWidth(),
+//                    createdAt = newsResult.created_at
+//                )
             }
         }
     }
 }
 
+//@Composable
+//fun TimeText(modifier: Modifier, createdAt: String){
+//    Row(
+//        modifier = modifier,
+//        verticalAlignment = Alignment.CenterVertically) {
+//        Icon(
+//            modifier = Modifier.size(18.dp),
+//            painter = painterResource(id = R.drawable.ic_time_24),
+//            tint = Color.Gray,
+//            contentDescription = null,
+//        )
+//        Text(
+//            modifier = Modifier
+//                .wrapContentWidth()
+//                .padding(start = 2.dp,end = 8.dp),
+//            text = fixTime(createdAt),
+//            color = Color.DarkGray,
+//            textAlign = TextAlign.Center,
+//            fontSize = 14.sp,
+//        )
+//    }
+//}
+
 @Composable
-fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>?, maxSize: Int = 2) {
-    if (currencies == null) return
+fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>, maxSize: Int = 2) {
     val list = if (currencies.size > maxSize) currencies.subList(0, maxSize) else currencies
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.End
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
     ) {
+        if (list.isEmpty()){
+            CoinHolder(modifier = Modifier.padding(end = 4.dp), name = "NEWS")
+        }
         list.forEach { currency ->
             CoinHolder(modifier = Modifier.padding(end = 4.dp), name = currency.code)
         }
@@ -170,6 +244,33 @@ fun CoinHolder(modifier: Modifier = Modifier, name: String) {
     }
 }
 
+@Preview
+@Composable
+fun SearchBar(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(15.dp))
+            .background(VeryLightGray)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier.padding(end = 8.dp),
+            painter = painterResource(
+            id = R.drawable.ic_search_24),
+            tint = Color.Gray,
+            contentDescription = null
+        )
+        Text(
+            text = "Search currency name",
+            fontSize = 20.sp,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight(300),
+            color = Color.Gray
+        )
+    }
+}
+
 fun fixTime(createdAt: String): String {
     return try {
         val utc = TimeZone.getTimeZone("UTC")
@@ -191,10 +292,10 @@ fun formatTimeDifference(timeDifference: Long): String {
     val hours = TimeUnit.MILLISECONDS.toHours(timeDifference)
     val days = TimeUnit.MILLISECONDS.toDays(timeDifference)
     return when {
-        days > 0 -> "${days}d"
-        hours > 0 -> "${hours}h"
-        minutes > 0 -> "${minutes}min"
-        seconds > 0 -> "${seconds}sec"
+        days > 0 -> "$days d"
+        hours > 0 -> "$hours h"
+        minutes > 0 -> "$minutes min"
+        seconds > 0 -> "$seconds sec"
         else -> ""
     }
 }
@@ -204,7 +305,7 @@ private fun openUrlInBrowser(context: Context?, url: String) {
     try {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(fixedUrlString))
         context?.startActivity(intent)
-    }catch (ex: java.lang.Exception){
+    } catch (ex: java.lang.Exception) {
         Log.e("TAG", "openUrlInBrowser: ", ex)
     }
 }

@@ -10,8 +10,7 @@ import androidx.paging.ExperimentalPagingApi
 import com.dissiapps.crypto.ui.closings.ClosingTimesScreen
 import com.dissiapps.crypto.ui.fgindex.FGIndexViewModel
 import com.dissiapps.crypto.ui.news.NewsScreen
-import com.dissiapps.crypto.ui.news.NewsScreenViewModel
-import com.dissiapps.cryptotools.ui.fgindex.FearGreedIndexScreen
+import com.dissiapps.crypto.ui.fgindex.FearGreedIndexScreen
 
 @OptIn(ExperimentalPagingApi::class)
 @Composable
@@ -29,8 +28,8 @@ fun AppNavigationHost(
             val viewModel = hiltViewModel<FGIndexViewModel>()
             FearGreedIndexScreen(viewModel = viewModel)
         }
-        composable(NavigationItem.CalculatorScreenNav.route){
-            Text(text = "calculator")
-        }
+//        composable(NavigationItem.CalculatorScreenNav.route){
+//            Text(text = "calculator")
+//        }
     }
 }

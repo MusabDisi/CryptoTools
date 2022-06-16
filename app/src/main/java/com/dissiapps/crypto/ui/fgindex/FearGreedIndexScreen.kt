@@ -1,4 +1,4 @@
-package com.dissiapps.cryptotools.ui.fgindex
+package com.dissiapps.crypto.ui.fgindex
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dissiapps.crypto.ui.fgindex.FGIndexViewModel
 import com.dissiapps.crypto.ui.theme.Orange
 
 
