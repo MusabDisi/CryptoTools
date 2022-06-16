@@ -2,7 +2,6 @@ package com.dissiapps.crypto.ui.news
 
 import android.content.Context
 import android.content.Intent
-import android.media.TimedText
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
@@ -18,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -38,46 +37,65 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import com.dissiapps.crypto.data.models.news.Currency
 import com.dissiapps.crypto.ui.common.MainTitleText
+import com.dissiapps.crypto.ui.navigation.NavigationPage
 import com.dissiapps.crypto.ui.theme.OffWhite
 import com.dissiapps.crypto.ui.theme.VeryLightGray
 import com.dissiapps.crypto.ui.theme.Yellow
 
 @ExperimentalPagingApi
 @Composable
-fun NewsScreen(viewModel: NewsScreenViewModel = hiltViewModel()) {
+fun NewsScreen(
+    navController: NavController,
+    viewModel: NewsScreenViewModel = hiltViewModel()
+) {
 
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
 
-    if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
-        CircularProgressIndicator()
-    }
-
-    LazyColumn(modifier = Modifier.padding(bottom = 56.dp)) {
+    LazyColumn(modifier = Modifier.padding(bottom = 64.dp)) {
 
         item {
             MainTitleText(mainText = "Latest News", descText = "Access to the latest crypto news")
         }
 
         item {
-            SearchBar(
+            CustomSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp, start = 12.dp, end = 12.dp)
+                    .padding(bottom = 16.dp, start = 12.dp, end = 12.dp),
+                onClick = {
+                    navController.navigate(NavigationPage.SearchNewsPage.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             )
         }
 
-        items(lazyPagingItems) { item ->
-            item ?: return@items
-            NewsItem(newsResult = item)
-            Divider(thickness = 1.dp)
+        if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(color = Color.Black)
+                }
+            }
+        }else{
+            items(lazyPagingItems) { item ->
+                item ?: return@items
+                NewsItem(newsResult = item)
+                Divider(thickness = 1.dp)
+            }
         }
 
         if (lazyPagingItems.loadState.append == LoadState.Loading) {
             item {
                 CircularProgressIndicator(
                     modifier = Modifier
+                        .padding(vertical = 8.dp)
                         .fillMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .wrapContentWidth(Alignment.CenterHorizontally),
+                    color = Color.Black
                 )
             }
         }
@@ -244,11 +262,11 @@ fun CoinHolder(modifier: Modifier = Modifier, name: String) {
     }
 }
 
-@Preview
 @Composable
-fun SearchBar(modifier: Modifier = Modifier) {
+fun CustomSearchBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
     Row(
         modifier = modifier
+            .clickable(onClick = onClick)
             .clip(RoundedCornerShape(15.dp))
             .background(VeryLightGray)
             .padding(horizontal = 12.dp, vertical = 10.dp),

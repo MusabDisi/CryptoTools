@@ -10,6 +10,7 @@ import androidx.room.withTransaction
 import com.dissiapps.crypto.data.local.AppDatabase
 import com.dissiapps.crypto.data.local.news.NewsModel
 import com.dissiapps.crypto.data.models.news.NewsResult
+import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -39,7 +40,7 @@ class NewsRemoteMediator(
                 LoadType.APPEND -> getNextPageKey()
             }
 
-
+            delay(3000)
             val response = newsApi.getNewPosts(page = page)
 
             database.withTransaction {

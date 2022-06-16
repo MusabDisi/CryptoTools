@@ -23,6 +23,7 @@ fun BottomNavigationBar(navigationController: NavHostController) {
     )
     val navBackStackEntry by navigationController.currentBackStackEntryAsState()
     val selectedRoute = navBackStackEntry?.destination?.route
+    if(navigationItems.map { it.route }.contains(selectedRoute))
     Column {
         Divider(thickness = 1.dp, color = Color.Gray)
         BottomNavigation(
