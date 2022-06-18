@@ -17,7 +17,7 @@ import com.dissiapps.crypto.ui.news.SearchNewsScreen
 fun AppNavigationHost(
     navigationController: NavHostController
 ){
-    NavHost(navController = navigationController, startDestination =  NavigationItem.NewsScreenNav.route) {
+    NavHost(navController = navigationController, startDestination =  NavigationItem.ClosingTimesScreenNav.route) {
         composable(NavigationItem.NewsScreenNav.route){
             NewsScreen(navigationController)
         }
@@ -29,7 +29,7 @@ fun AppNavigationHost(
             FearGreedIndexScreen(viewModel = viewModel)
         }
         composable(NavigationPage.SearchNewsPage.route){
-            SearchNewsScreen()
+            SearchNewsScreen(navigationController)
         }
     }
 }

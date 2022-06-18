@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MainTitleText(mainText: String, descText: String){
+fun MainTitleText(mainText: String, descText: String? = null){
     Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 36.dp, bottom = 20.dp)) {
         Text(
             text = mainText,
@@ -20,7 +20,7 @@ fun MainTitleText(mainText: String, descText: String){
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight.Bold
         )
-        if(descText.isNotEmpty())
+        if(descText != null)
             Text(text = descText, color = Color.Gray)
     }
 }

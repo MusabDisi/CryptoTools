@@ -65,7 +65,6 @@ fun NewsScreen(
                 onClick = {
                     navController.navigate(NavigationPage.SearchNewsPage.route) {
                         launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
@@ -80,7 +79,7 @@ fun NewsScreen(
                     CircularProgressIndicator(color = Color.Black)
                 }
             }
-        }else{
+        } else {
             items(lazyPagingItems) { item ->
                 item ?: return@items
                 NewsItem(newsResult = item)

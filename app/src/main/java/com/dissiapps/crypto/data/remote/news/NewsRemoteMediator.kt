@@ -40,7 +40,6 @@ class NewsRemoteMediator(
                 LoadType.APPEND -> getNextPageKey()
             }
 
-            delay(3000)
             val response = newsApi.getNewPosts(page = page)
 
             database.withTransaction {

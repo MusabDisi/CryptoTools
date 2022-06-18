@@ -3,6 +3,8 @@ package com.dissiapps.crypto.ui.news
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,23 +16,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.dissiapps.crypto.R
 import com.dissiapps.crypto.ui.theme.VeryLightGray
 
 @Composable
-fun SearchNewsScreen(){
+fun SearchNewsScreen(navController: NavController){
     Column(Modifier.fillMaxSize()) {
-        SearchField(Modifier.fillMaxWidth())
+        SearchField(Modifier.fillMaxWidth(), onBackClicked = { navController.popBackStack() })
         SearchIcon(Modifier.padding(vertical = 24.dp))
     }
 }
 
 @Composable
-fun SearchField(modifier: Modifier = Modifier) {
+fun SearchField(modifier: Modifier = Modifier, onBackClicked: () -> Unit) {
     val focusRequester = remember { FocusRequester() }
     var text by remember { mutableStateOf("") }
     TextField(
@@ -38,9 +42,14 @@ fun SearchField(modifier: Modifier = Modifier) {
         value = text,
         placeholder = { Text(text = "ex: BTC", fontSize = 18.sp) },
         maxLines = 1,
-        leadingIcon = { Icon(
-            painter = painterResource(id = R.drawable.ic_arrow_back_24),
-            contentDescription = null
+        leadingIcon = { IconButton(
+            content = { Icon(
+                painter = painterResource(id = R.drawable.ic_arrow_back_24),
+                contentDescription = null
+            ) },
+            onClick = {
+                onBackClicked()
+            }
         ) },
         trailingIcon = { IconButton(
             modifier = Modifier.padding(end = 8.dp),
@@ -52,8 +61,7 @@ fun SearchField(modifier: Modifier = Modifier) {
         textStyle = TextStyle(
             fontSize = 18.sp,
             fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight(300),
-            color = Color.Gray
+            fontWeight = FontWeight(400)
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             textColor = Color.Black,
@@ -63,6 +71,7 @@ fun SearchField(modifier: Modifier = Modifier) {
             cursorColor = Color.Black,
             focusedBorderColor = Color(0x99000000)
         ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
         onValueChange = {
             text = it
         },
@@ -77,7 +86,9 @@ fun SearchField(modifier: Modifier = Modifier) {
 @Composable
 fun SearchIcon(modifier: Modifier = Modifier){
     Column(
-        modifier = modifier.wrapContentHeight().fillMaxWidth(),
+        modifier = modifier
+            .wrapContentHeight()
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
