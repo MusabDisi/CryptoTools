@@ -19,10 +19,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dissiapps.crypto.ui.common.MainTitleText
 import com.dissiapps.crypto.ui.theme.Orange
 
 
-@Preview(showBackground = true)
 @Composable
 fun FearGreedIndexScreen(viewModel: FGIndexViewModel = hiltViewModel()) {
     val state by remember { viewModel.state }
@@ -32,11 +32,11 @@ fun FearGreedIndexScreen(viewModel: FGIndexViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
     ) {
         if (state != FGIndexViewModel.UiState.SUCCESS) {
             CircularProgressIndicator()
         } else {
+            MainTitleText(modifier = Modifier.fillMaxWidth(), mainText = "Fear & Greed Index")
             IndexAndLabelColumn(index = index, classification = classification)
             GradiantScaleHorizontal(index = index.toInt())
             Row(
@@ -73,7 +73,7 @@ fun IndexAndLabelColumn(
                     )
                 }
                 .padding(40.dp),
-            text = index,
+            text = String.format("%02d", index.toInt()), // TODO:
             fontSize = 100.sp,
             color = Color.White
         )

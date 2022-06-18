@@ -1,8 +1,10 @@
 package com.dissiapps.crypto.ui.closings
 
+import android.icu.util.LocaleData
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.delay
+import java.time.LocalDate
 import java.util.*
 
 
@@ -51,12 +53,13 @@ class ClosingTimesHelper {
 
     private fun updateNextWeek(){
         val calendar = Calendar.getInstance(timeZone)
-        val targetDay = calendar.get(Calendar.DAY_OF_YEAR).plus(7)
+        while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY){
+            calendar.add(Calendar.DATE, 1)
+        }
         calendar.apply {
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.DAY_OF_YEAR, targetDay)
         }
         nextWeek = calendar.timeInMillis
     }

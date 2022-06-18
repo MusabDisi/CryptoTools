@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MainTitleText(mainText: String, descText: String? = null){
-    Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 36.dp, bottom = 20.dp)) {
+fun MainTitleText(modifier: Modifier = Modifier, mainText: String, descText: String? = null){
+    Column(modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 36.dp, bottom = 20.dp)) {
         Text(
             text = mainText,
             fontSize = 30.sp,
