@@ -13,6 +13,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +41,7 @@ fun SearchField(modifier: Modifier = Modifier, onBackClicked: () -> Unit) {
     TextField(
         modifier = modifier.focusRequester(focusRequester),
         value = text,
-        placeholder = { Text(text = "ex: BTC", fontSize = 18.sp) },
+        placeholder = { Text(text = stringResource(R.string.search_example), fontSize = 18.sp) },
         maxLines = 1,
         leadingIcon = { IconButton(
             content = { Icon(
@@ -97,7 +98,7 @@ fun SearchIcon(modifier: Modifier = Modifier){
             contentDescription = null
         )
         Text(
-            text = "Search by code",
+            text = stringResource(id = R.string.search_currency_code),
             fontFamily = FontFamily.SansSerif,
             fontSize = 20.sp
         )

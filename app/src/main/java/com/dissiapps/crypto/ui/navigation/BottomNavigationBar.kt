@@ -1,5 +1,6 @@
 package com.dissiapps.crypto.ui.navigation
 
+import com.dissiapps.crypto.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
@@ -7,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,7 +29,9 @@ fun BottomNavigationBar(navigationController: NavHostController) {
     Column {
         Divider(thickness = 1.dp, color = Color.Gray)
         BottomNavigation(
-            modifier = Modifier.height(64.dp),
+            modifier = Modifier.height(
+                dimensionResource(id = R.dimen.bottom_nav_bar_height)
+            ),
             contentColor = Color.Gray,
             backgroundColor = Color.White
         ) {

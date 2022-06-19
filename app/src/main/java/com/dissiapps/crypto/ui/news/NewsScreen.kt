@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -51,10 +53,13 @@ fun NewsScreen(
 
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
 
-    LazyColumn(modifier = Modifier.padding(bottom = 64.dp)) {
+    LazyColumn(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.bottom_nav_bar_height))) {
 
         item {
-            MainTitleText(mainText = "Latest News", descText = "Access to the latest crypto news")
+            MainTitleText(
+                mainText = stringResource(id = R.string.NewsTitle),
+                descText = stringResource(id = R.string.NewsDesc)
+            )
         }
 
         item {
@@ -73,7 +78,9 @@ fun NewsScreen(
         if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
             item {
                 Box(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(color = Color.Black)
@@ -103,7 +110,7 @@ fun NewsScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun NewsItemPreview() {
+private fun NewsItemPreview() {
     val newsResult = NewsModel(
         currencies = listOf(
             Currency("BTC", "BTC", "BTC", "something.com"),
@@ -122,7 +129,7 @@ fun NewsItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun NewsItemPreview2() {
+private fun NewsItemPreview2() {
     val newsResult = NewsModel(
         currencies = listOf(
             Currency("BTC", "BTC", "BTC", "something.com"),
@@ -140,7 +147,7 @@ fun NewsItemPreview2() {
 }
 
 @Composable
-fun NewsItem(newsResult: NewsModel) {
+private fun NewsItem(newsResult: NewsModel) {
     var context: Context? = null
     Row(
         modifier = Modifier
@@ -193,36 +200,10 @@ fun NewsItem(newsResult: NewsModel) {
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp,
                 )
-//                TimeText(modifier = Modifier.wrapContentWidth(),
-//                    createdAt = newsResult.created_at
-//                )
             }
         }
     }
 }
-
-//@Composable
-//fun TimeText(modifier: Modifier, createdAt: String){
-//    Row(
-//        modifier = modifier,
-//        verticalAlignment = Alignment.CenterVertically) {
-//        Icon(
-//            modifier = Modifier.size(18.dp),
-//            painter = painterResource(id = R.drawable.ic_time_24),
-//            tint = Color.Gray,
-//            contentDescription = null,
-//        )
-//        Text(
-//            modifier = Modifier
-//                .wrapContentWidth()
-//                .padding(start = 2.dp,end = 8.dp),
-//            text = fixTime(createdAt),
-//            color = Color.DarkGray,
-//            textAlign = TextAlign.Center,
-//            fontSize = 14.sp,
-//        )
-//    }
-//}
 
 @Composable
 fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>, maxSize: Int = 2) {
@@ -233,7 +214,7 @@ fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>, maxSize:
         horizontalArrangement = Arrangement.Start
     ) {
         if (list.isEmpty()){
-            CoinHolder(modifier = Modifier.padding(end = 4.dp), name = "NEWS")
+            CoinHolder(modifier = Modifier.padding(end = 4.dp), name = stringResource(R.string.news))
         }
         list.forEach { currency ->
             CoinHolder(modifier = Modifier.padding(end = 4.dp), name = currency.code)
@@ -279,7 +260,7 @@ fun CustomSearchBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
             contentDescription = null
         )
         Text(
-            text = "Search currency name",
+            text = stringResource(R.string.search_currency_code),
             fontSize = 20.sp,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight(300),
@@ -308,7 +289,7 @@ fun formatTimeDifference(timeDifference: Long): String {
     val minutes = TimeUnit.MILLISECONDS.toMinutes(timeDifference)
     val hours = TimeUnit.MILLISECONDS.toHours(timeDifference)
     val days = TimeUnit.MILLISECONDS.toDays(timeDifference)
-    return when {
+    return when { // TODO: extract string resources
         days > 0 -> "$days d"
         hours > 0 -> "$hours h"
         minutes > 0 -> "$minutes min"

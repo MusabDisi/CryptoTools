@@ -4,4 +4,27 @@
     <string name="nav_title_closings">Closings</string>
     <string name="nav_title_index">Index</string>
     <string name="nav_title_news">News</string>
+    <string name="fgIndexTitle"><![CDATA[Fear & Greed Index]]></string>
+    <string name="fgIndexUrl">alternative.me</string>
+    <string name="NewsTitle">Latest Headlines</string>
+    <string name="NewsDesc">Access to the latest crypto news headlines</string>
+    <string name="news">NEWS</string>
+    <string name="search_currency_code">Search currency code</string>
+    <string name="search_example">ex: BTC</string>
+    <string name="Closings_Title">Closing Times</string>
+    <string name="hourly_close">Hourly Close</string>
+    <string name="daily_close">Daily Close</string>
+    <string name="weekly_close">Weekly Close</string>
+    <string name="monthly_close">Monthly Close</string>
+    <string name="current_time">Current Time</string>
+    <string name="closing_time">Closing time</string>
+    <string name="time_left">Time Left:</string>
+    <string name="days">days</string>
+    <string name="hours">hours</string>
+    <string name="minutes">minutes</string>
+    <string name="seconds">seconds</string>
+    <string name="hourly">Hourly</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
 </resources>

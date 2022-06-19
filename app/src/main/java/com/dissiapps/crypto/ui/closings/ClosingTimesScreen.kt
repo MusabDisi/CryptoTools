@@ -11,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dissiapps.crypto.R
 import com.dissiapps.crypto.ui.common.MainTitleText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,13 +57,13 @@ fun ClosingTimesScreen() {
             .fillMaxSize()
             .padding(bottom = 64.dp)//Bottom nav
     ) {
-        MainTitleText(mainText = "Closing Times")
+        MainTitleText(mainText = stringResource(R.string.Closings_Title))
 
         SimpleTabLayout(){ idx -> selectedIdx = idx }
 
         when(selectedIdx){
             0 -> LabeledClockRow(
-                label = "Hourly Close",
+                label = stringResource(R.string.hourly_close),
                 dayValue = timeLeftHourly.value.days,
                 hourValue = timeLeftHourly.value.hours,
                 minValue = timeLeftHourly.value.minutes,
@@ -70,7 +72,7 @@ fun ClosingTimesScreen() {
                 shouldShowDate = false
             )
             1 -> LabeledClockRow(
-                label = "Daily Close",
+                label = stringResource(R.string.daily_close),
                 dayValue = timeLeftDaily.value.days,
                 hourValue = timeLeftDaily.value.hours,
                 minValue = timeLeftDaily.value.minutes,
@@ -79,7 +81,7 @@ fun ClosingTimesScreen() {
                 shouldShowDate = false
             )
             2 -> LabeledClockRow(
-                label = "Weekly Close",
+                label = stringResource(R.string.weekly_close),
                 dayValue = timeLeftWeekly.value.days,
                 hourValue = timeLeftWeekly.value.hours,
                 minValue = timeLeftWeekly.value.minutes,
@@ -88,7 +90,7 @@ fun ClosingTimesScreen() {
                 shouldShowDate = true
             )
             else -> LabeledClockRow(
-                label = "Monthly Close",
+                label = stringResource(R.string.monthly_close),
                 dayValue = timeLeftMonthly.value.days,
                 hourValue = timeLeftMonthly.value.hours,
                 minValue = timeLeftMonthly.value.minutes,
@@ -149,21 +151,21 @@ fun LabeledClockRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp, start = 18.dp),
-            labelText = "Current Time",
+            labelText = stringResource(R.string.current_time),
             valueText = currentTimeString
         )
         TwoValuesTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp, start = 18.dp),
-            labelText = "Closing time",
+            labelText = stringResource(R.string.closing_time),
             valueText = closingTimeString
         )
         Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 18.dp),
-            text = "Time Left:",
+            text = stringResource(R.string.time_left),
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp
         )
@@ -199,13 +201,13 @@ fun ClockRow(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        NumberBox(text = dayValue, title = "days")
+        NumberBox(text = dayValue, title = stringResource(R.string.days))
         SeparationColon()
-        NumberBox(text = hourValue, title = "hours")
+        NumberBox(text = hourValue, title = stringResource(R.string.hours))
         SeparationColon()
-        NumberBox(text = minValue, title = "minutes")
+        NumberBox(text = minValue, title = stringResource(R.string.minutes))
         SeparationColon()
-        NumberBox(text = secValue, title = "seconds")
+        NumberBox(text = secValue, title = stringResource(R.string.seconds))
     }
 }
 
@@ -230,7 +232,12 @@ fun NumberBox(text: String, title: String) {
 
 @Composable
 fun SimpleTabLayout(onIndexChanged: (Int) -> Unit){
-    val tabTitles = mutableListOf("Hourly", "Daily", "Weekly", "Monthly")
+    val tabTitles = mutableListOf(
+        stringResource(R.string.hourly),
+        stringResource(R.string.daily),
+        stringResource(R.string.weekly),
+        stringResource(R.string.monthly)
+    )
     var tabIndex by remember { mutableStateOf(0) }
 
     LazyRow(modifier = Modifier.padding(start = 12.dp)) {

@@ -16,9 +16,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.dissiapps.crypto.R
 import com.dissiapps.crypto.ui.common.MainTitleText
 import com.dissiapps.crypto.ui.theme.Orange
 
@@ -36,17 +38,18 @@ fun FearGreedIndexScreen(viewModel: FGIndexViewModel = hiltViewModel()) {
         if (state != FGIndexViewModel.UiState.SUCCESS) {
             CircularProgressIndicator()
         } else {
-            MainTitleText(modifier = Modifier.fillMaxWidth(), mainText = "Fear & Greed Index")
+            MainTitleText(modifier = Modifier.fillMaxWidth(), mainText = stringResource(id = R.string.fgIndexTitle))
             IndexAndLabelColumn(index = index, classification = classification)
             GradiantScaleHorizontal(index = index.toInt())
             Row(
-                Modifier.fillMaxWidth()
+                Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(text = lastUpdated)
-                Text(text = "alternative.me")
+                Text(text = stringResource(id = R.string.fgIndexUrl))
             }
         }
     }
@@ -65,6 +68,13 @@ fun IndexAndLabelColumn(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
+            modifier = Modifier.padding(40.dp),
+            text = classification,
+            fontSize = 40.sp,
+            color = color,
+            fontWeight = FontWeight.Bold
+        )
+        Text(
             modifier = Modifier
                 .drawBehind {
                     drawCircle(
@@ -76,13 +86,6 @@ fun IndexAndLabelColumn(
             text = String.format("%02d", index.toInt()), // TODO:
             fontSize = 100.sp,
             color = Color.White
-        )
-        Text(
-            modifier = Modifier.padding(40.dp),
-            text = classification,
-            fontSize = 40.sp,
-            color = color,
-            fontWeight = FontWeight.Bold
         )
     }
 }
@@ -104,12 +107,12 @@ fun getColorFromIndex(index: String): Color {
 
 @Preview
 @Composable
-fun PreviewGradiantScale() {
+private fun PreviewGradiantScale() {
     GradiantScaleHorizontal(index = 80)
 }
 
 @Composable
-fun GradiantScaleHorizontal(index: Int) {
+private fun GradiantScaleHorizontal(index: Int) {
     var leftPadding by remember { mutableStateOf(0.dp) }
     var width by remember { mutableStateOf(0) }
 
