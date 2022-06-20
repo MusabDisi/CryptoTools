@@ -68,17 +68,6 @@ class NewsRemoteMediator(
         }
     }
 
-    private fun convertToNewsModel(newData: List<NewsResult>): List<NewsModel> {
-        return newData.map {
-            NewsModel(
-                url = it.url,
-                created_at = it.created_at,
-                title = it.title,
-                sourceDomain = it.source.domain,
-                currencies = it.currencies)
-        }
-    }
-
     private fun getNextPageKey(): Int {
         return sp.getInt(NEXT_PAGE_KEY, 0)
     }

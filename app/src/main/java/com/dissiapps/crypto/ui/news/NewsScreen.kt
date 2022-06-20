@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.dissiapps.crypto.R
@@ -48,9 +50,15 @@ import com.dissiapps.crypto.ui.theme.Yellow
 @Composable
 fun NewsScreen(
     navController: NavController,
+    currencyCode: List<String>,
     viewModel: NewsScreenViewModel = hiltViewModel()
 ) {
 
+    LaunchedEffect(key1 = currencyCode){
+        viewModel.setCurrenciesList(currencyCode)
+    }
+
+    var loaded = false
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
 
     LazyColumn(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.bottom_nav_bar_height))) {
@@ -67,6 +75,7 @@ fun NewsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp, start = 12.dp, end = 12.dp),
+                text = if (currencyCode.isNotEmpty()) currencyCode[0] else null,
                 onClick = {
                     navController.navigate(NavigationPage.SearchNewsPage.route) {
                         launchSingleTop = true
@@ -86,11 +95,18 @@ fun NewsScreen(
                     CircularProgressIndicator(color = Color.Black)
                 }
             }
+            loaded = true
         } else {
-            items(lazyPagingItems) { item ->
-                item ?: return@items
-                NewsItem(newsResult = item)
-                Divider(thickness = 1.dp)
+            if (lazyPagingItems.itemCount == 0 && loaded && currencyCode.isNotEmpty()) {
+                item {
+                    NoSearchResults()
+                }
+            } else {
+                items(lazyPagingItems) { item ->
+                    item ?: return@items
+                    NewsItem(newsResult = item)
+                    Divider(thickness = 1.dp)
+                }
             }
         }
 
@@ -243,7 +259,10 @@ fun CoinHolder(modifier: Modifier = Modifier, name: String) {
 }
 
 @Composable
-fun CustomSearchBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun CustomSearchBar(
+    modifier: Modifier = Modifier,
+    text: String?,
+    onClick: () -> Unit) {
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
@@ -260,10 +279,37 @@ fun CustomSearchBar(modifier: Modifier = Modifier, onClick: () -> Unit) {
             contentDescription = null
         )
         Text(
-            text = stringResource(R.string.search_currency_code),
+            text = text?.uppercase(Locale.ENGLISH) ?: stringResource(R.string.search_currency_code),
             fontSize = 20.sp,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight(300),
+            color = if(text == null) Color.Gray else Color.Black
+        )
+    }
+}
+
+@Composable
+fun NoSearchResults(modifier: Modifier = Modifier){
+    Column(
+        modifier = modifier
+            .wrapContentHeight()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_search_off_24),
+            tint = Color.Black,
+            contentDescription = null
+        )
+        Text(
+            text = stringResource(id = R.string.no_search_results_found),
+            fontFamily = FontFamily.SansSerif,
+            fontSize = 20.sp
+        )
+        Text(
+            text = stringResource(id = R.string.plz_enter_a_valid_code),
+            fontFamily = FontFamily.SansSerif,
+            fontSize = 16.sp,
             color = Color.Gray
         )
     }
