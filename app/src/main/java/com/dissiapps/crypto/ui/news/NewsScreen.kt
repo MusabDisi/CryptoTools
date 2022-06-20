@@ -41,6 +41,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import com.dissiapps.crypto.data.models.news.Currency
 import com.dissiapps.crypto.ui.common.MainTitleText
+import com.dissiapps.crypto.ui.navigation.NavigationItem
 import com.dissiapps.crypto.ui.navigation.NavigationPage
 import com.dissiapps.crypto.ui.theme.OffWhite
 import com.dissiapps.crypto.ui.theme.VeryLightGray
@@ -80,6 +81,9 @@ fun NewsScreen(
                     navController.navigate(NavigationPage.SearchNewsPage.route) {
                         launchSingleTop = true
                     }
+                },
+                onClear = {
+                    navController.popBackStack()
                 }
             )
         }
@@ -97,7 +101,7 @@ fun NewsScreen(
             }
             loaded = true
         } else {
-            if (lazyPagingItems.itemCount == 0 && loaded && currencyCode.isNotEmpty()) {
+            if (lazyPagingItems.itemCount == 0 && loaded) {
                 item {
                     NoSearchResults()
                 }
@@ -258,11 +262,19 @@ fun CoinHolder(modifier: Modifier = Modifier, name: String) {
     }
 }
 
+@Preview
+@Composable
+fun CustomSearchBarPreview(){
+    CustomSearchBar(text = "txt", onClick = {}){}
+}
+
 @Composable
 fun CustomSearchBar(
     modifier: Modifier = Modifier,
     text: String?,
-    onClick: () -> Unit) {
+    onClick: () -> Unit,
+    onClear: () -> Unit
+) {
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
@@ -271,20 +283,36 @@ fun CustomSearchBar(
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            modifier = Modifier.padding(end = 8.dp),
-            painter = painterResource(
-            id = R.drawable.ic_search_24),
-            tint = Color.Gray,
-            contentDescription = null
-        )
+        if (text == null)
+            Icon(
+                modifier = Modifier.padding(end = 8.dp),
+                painter = painterResource(
+                    id = R.drawable.ic_search_24
+                ),
+                tint = Color.Gray,
+                contentDescription = null
+            )
         Text(
+            modifier = Modifier.weight(1f),
             text = text?.uppercase(Locale.ENGLISH) ?: stringResource(R.string.search_currency_code),
             fontSize = 20.sp,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight(300),
-            color = if(text == null) Color.Gray else Color.Black
+            color = if (text == null) Color.Gray else Color.Black
         )
+        if (text != null)
+            Icon(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .clickable {
+                        onClear()
+                    },
+                painter = painterResource(
+                    id = R.drawable.ic_baseline_close_24
+                ),
+                tint = Color.Black,
+                contentDescription = null
+            )
     }
 }
 

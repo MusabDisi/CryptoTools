@@ -53,8 +53,12 @@ class ClosingTimesHelper {
 
     private fun updateNextWeek(){
         val calendar = Calendar.getInstance(timeZone)
-        while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY){
-            calendar.add(Calendar.DATE, 1)
+        if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY){
+            calendar.add(Calendar.DATE, 7)
+        }else{
+            while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY){
+                calendar.add(Calendar.DATE, 1)
+            }
         }
         calendar.apply {
             set(Calendar.MINUTE, 0)

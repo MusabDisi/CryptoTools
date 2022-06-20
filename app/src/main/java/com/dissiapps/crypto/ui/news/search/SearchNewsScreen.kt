@@ -84,7 +84,7 @@ fun SearchNewsScreen(
 
 fun searchString(navController: NavController, string: String){
     navController.navigate(NavigationItem.NewsScreenNav.createNavigationRoute(string)){
-        launchSingleTop = true
+        popUpTo(navController.graph.startDestinationId)
     }
 }
 
