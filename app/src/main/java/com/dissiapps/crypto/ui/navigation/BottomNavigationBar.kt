@@ -50,6 +50,9 @@ fun BottomNavigationBar(navigationController: NavHostController) {
                         alwaysShowLabel = selectedRoute == it.route,
                         onClick = {
                             navigationController.navigate(it.route) {
+                                popUpTo(navigationController.graph.startDestinationId){
+                                    saveState = true
+                                }
                                 launchSingleTop = true
                                 restoreState = true
                             }

@@ -18,7 +18,7 @@ class NewsPagingSource(
             LoadResult.Page(
                 data = data,
                 prevKey = null, // Only paging forward.
-                nextKey = if(response.next != null) page+1 else null
+                nextKey = if(response.next != null) page + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

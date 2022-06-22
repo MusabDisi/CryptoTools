@@ -1,6 +1,7 @@
 package com.dissiapps.crypto.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,6 +11,7 @@ import androidx.paging.ExperimentalPagingApi
 import com.dissiapps.crypto.ui.closings.ClosingTimesScreen
 import com.dissiapps.crypto.ui.news.NewsScreen
 import com.dissiapps.crypto.ui.fgindex.FearGreedIndexScreen
+import com.dissiapps.crypto.ui.news.NewsScreenViewModel
 import com.dissiapps.crypto.ui.news.search.SearchNewsScreen
 
 @OptIn(ExperimentalPagingApi::class)

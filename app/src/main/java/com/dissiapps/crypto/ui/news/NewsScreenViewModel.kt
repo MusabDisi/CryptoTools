@@ -9,8 +9,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.dissiapps.crypto.App
 import com.dissiapps.crypto.data.local.AppDatabase
+import com.dissiapps.crypto.data.remote.coinprice_websocket.CoinCapSocketManager
 import com.dissiapps.crypto.data.remote.news.NewsApi
 import com.dissiapps.crypto.data.remote.news.NewsPagingSource
 import com.dissiapps.crypto.data.remote.news.NewsRemoteMediator
@@ -18,10 +18,8 @@ import com.dissiapps.crypto.data.remote.coinprice_websocket.CoinCapSocketManager
 import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Subscribe
 import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Ticker
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -31,16 +29,17 @@ class NewsScreenViewModel @Inject constructor(
     newsApi: NewsApi,
     database: AppDatabase,
     app: Application
-): ViewModel() {
+): ViewModel() { // TODO: handle process death
 
     private val pagingConfig = PagingConfig(
         pageSize = 20,
         enablePlaceholders = true,
         maxSize = 200
     )
+
     private val newsDao = database.getNewsDao()
     private val _currenciesList = MutableStateFlow(listOf<String>())
-    private val coinCapSocketManager = App.coinCapSocketManager
+    private val coinCapSocketManager = CoinCapSocketManager.getInstance(viewModelScope)
 
     private val _btcTicker = mutableStateOf<UiState>(UiState.Loading)
     val btcTicker:State<UiState> get() = _btcTicker
@@ -72,20 +71,25 @@ class NewsScreenViewModel @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val news = _currenciesList.flatMapLatest { list ->
-        if (list.isEmpty()){
-            Pager( pagingConfig,
-                remoteMediator = NewsRemoteMediator(database, newsApi, app.applicationContext)
-            ) {
-                newsDao.getNews()
-            }.flow.cachedIn(viewModelScope)
+    private val cachedPager = Pager( pagingConfig,
+        remoteMediator = NewsRemoteMediator(database, newsApi, app.applicationContext)
+    ) {
+        newsDao.getNews()
+    }.flow.cachedIn(viewModelScope)
+
+
+    val news = if (_currenciesList.value.isEmpty()){
+            cachedPager
         }else{
             Pager(pagingConfig) {
-                NewsPagingSource(newsApi, list)
+                NewsPagingSource(newsApi, _currenciesList.value)
             }.flow.cachedIn(viewModelScope)
         }
-    }
+
+//    override fun onCleared() {
+//        super.onCleared()
+//        coinCapSocketManager.closeConnection()
+//    }
 
     fun setCurrenciesList(list: List<String>){
         _currenciesList.value = list

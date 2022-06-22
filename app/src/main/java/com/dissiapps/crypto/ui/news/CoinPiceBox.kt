@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -103,7 +102,12 @@ fun ShimmerItem() {
 
 private fun String.toNumberWithComma(): String {
     return try {
-        String.format("%,d", this.toFloat().toInt())
+        val floatValue = this.toFloat()
+        if (floatValue > 1000){
+            String.format("%,d", floatValue.toInt())
+        }else{
+            String.format("%,f", floatValue)
+        }
     }catch (ex: Exception){
         Log.e("TAG", "toNumberWithComma: $ex")
         "0"

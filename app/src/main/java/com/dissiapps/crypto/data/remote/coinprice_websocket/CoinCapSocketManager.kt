@@ -1,5 +1,6 @@
 package com.dissiapps.crypto.data.remote.coinprice_websocket
 
+import android.util.Log
 import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Subscribe
 import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Ticker
 import com.google.gson.Gson
@@ -34,8 +35,8 @@ class CoinCapSocketManager private constructor(
 
     private var webSocket: WebSocket? = null
 
-    private val _events = MutableSharedFlow<WebSocketEvent>()
-    val socketEvents:SharedFlow<WebSocketEvent> get() = _events
+    private val _socketEvents = MutableSharedFlow<WebSocketEvent>()
+    val socketEvents:SharedFlow<WebSocketEvent> get() = _socketEvents
 
     private val httpLoggingInterceptor by lazy {
         HttpLoggingInterceptor().apply {
@@ -65,17 +66,21 @@ class CoinCapSocketManager private constructor(
     private val coinCapWebSocketListener by lazy {
         object : CoinCapWebSocketListener() {
             override fun onMessage(webSocket: WebSocket, text: String) {
+                super.onMessage(webSocket, text)
                 externalScope.launch {
-                    delay(4000)
-                    val result = convertStringToModel(text)
-                    _events.emit(WebSocketEvent.OnMessageReceived(result))
+                    try {
+                        val result = convertStringToModel(text)
+                        _socketEvents.emit(WebSocketEvent.OnMessageReceived(result))
+                    }catch (ex: Exception){
+                        Log.e(TAG, "onMessage: $text")
+                    }
                 }
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 super.onFailure(webSocket, t, response)
                 externalScope.launch {
-                    _events.emit(WebSocketEvent.OnConnectionFailed(t, response))
+                    _socketEvents.emit(WebSocketEvent.OnConnectionFailed(t, response))
                 }
             }
         }

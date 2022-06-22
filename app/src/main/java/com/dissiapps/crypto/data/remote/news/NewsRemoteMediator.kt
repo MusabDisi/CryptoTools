@@ -77,4 +77,5 @@ class NewsRemoteMediator(
             putInt(NEXT_PAGE_KEY, page)
         }
     }
+
 }

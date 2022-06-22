@@ -83,7 +83,7 @@ fun NewsScreen(
                         price = if (isSuccess) {
                             (bitcoinTicker as UiState.Success).ticker.price
                         } else {
-                            ""
+                            "0"
                         },
                         isLoading = !isSuccess
                     )
@@ -98,7 +98,7 @@ fun NewsScreen(
                         price = if (isSuccess) {
                             (etherTicker as UiState.Success).ticker.price
                         } else {
-                            ""
+                            "0"
                         },
                         isLoading = !isSuccess
                     )
