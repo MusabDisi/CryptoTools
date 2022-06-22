@@ -24,7 +24,7 @@ class CustomTrie {
     }
 
     fun search(string: String): List<String> {
-        var current = root
+        var current = root //se
 
         for(char in string){
             current = current.characters[char] ?: return emptyList()

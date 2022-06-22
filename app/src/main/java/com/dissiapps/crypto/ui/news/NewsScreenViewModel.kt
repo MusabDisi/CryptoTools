@@ -1,23 +1,25 @@
 package com.dissiapps.crypto.ui.news
 
 import android.app.Application
-import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.dissiapps.crypto.App
 import com.dissiapps.crypto.data.local.AppDatabase
 import com.dissiapps.crypto.data.remote.news.NewsApi
 import com.dissiapps.crypto.data.remote.news.NewsPagingSource
 import com.dissiapps.crypto.data.remote.news.NewsRemoteMediator
+import com.dissiapps.crypto.data.remote.coinprice_websocket.CoinCapSocketManager.WebSocketEvent.*
+import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Subscribe
+import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Ticker
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
@@ -38,6 +40,37 @@ class NewsScreenViewModel @Inject constructor(
     )
     private val newsDao = database.getNewsDao()
     private val _currenciesList = MutableStateFlow(listOf<String>())
+    private val coinCapSocketManager = App.coinCapSocketManager
+
+    private val _btcTicker = mutableStateOf<UiState>(UiState.Loading)
+    val btcTicker:State<UiState> get() = _btcTicker
+
+    private val _ethTicker = mutableStateOf<UiState>(UiState.Loading)
+    val ethTicker:State<UiState> get() = _ethTicker
+
+    init {
+        coinCapSocketManager.openSocketConnection()
+        viewModelScope.launch {
+            coinCapSocketManager.socketEvents.collectLatest {
+                when (it) {
+                    is OnMessageReceived -> {
+                        when(it.ticker.product){
+                            Subscribe.ProductId.BTC_USD.value -> {
+                                _btcTicker.value = UiState.Success(it.ticker)
+                            }
+                            Subscribe.ProductId.ETH_USD.value -> {
+                                _ethTicker.value = UiState.Success(it.ticker)
+                            }
+                        }
+                    }
+                    is OnConnectionFailed -> {
+                        _btcTicker.value = UiState.Error
+                        _ethTicker.value = UiState.Error
+                    }
+                }
+            }
+        }
+    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val news = _currenciesList.flatMapLatest { list ->
@@ -56,5 +89,11 @@ class NewsScreenViewModel @Inject constructor(
 
     fun setCurrenciesList(list: List<String>){
         _currenciesList.value = list
+    }
+
+    sealed class UiState {
+        class Success(val ticker: Ticker): UiState()
+        object Error : UiState()
+        object Loading: UiState()
     }
 }

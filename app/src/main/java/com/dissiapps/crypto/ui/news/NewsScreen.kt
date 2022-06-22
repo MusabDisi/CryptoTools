@@ -19,7 +19,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,7 +30,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.paging.LoadStates
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.dissiapps.crypto.R
@@ -41,8 +39,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import com.dissiapps.crypto.data.models.news.Currency
 import com.dissiapps.crypto.ui.common.MainTitleText
-import com.dissiapps.crypto.ui.navigation.NavigationItem
 import com.dissiapps.crypto.ui.navigation.NavigationPage
+import com.dissiapps.crypto.ui.news.NewsScreenViewModel.UiState
 import com.dissiapps.crypto.ui.theme.OffWhite
 import com.dissiapps.crypto.ui.theme.VeryLightGray
 import com.dissiapps.crypto.ui.theme.Yellow
@@ -59,6 +57,8 @@ fun NewsScreen(
         viewModel.setCurrenciesList(currencyCode)
     }
 
+    val bitcoinTicker by remember { viewModel.btcTicker }
+    val etherTicker by remember { viewModel.ethTicker }
     var loaded = false
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
 
@@ -69,6 +69,41 @@ fun NewsScreen(
                 mainText = stringResource(id = R.string.NewsTitle),
                 descText = stringResource(id = R.string.NewsDesc)
             )
+        }
+
+        item {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                if(bitcoinTicker != UiState.Error){
+                    val isSuccess = bitcoinTicker is UiState.Success
+                    CoinPriceBox(
+                        modifier = Modifier
+                            .padding(start = 12.dp, end = 4.dp, bottom = 8.dp)
+                            .weight(1f),
+                        name = "BTC/USD",
+                        price = if (isSuccess) {
+                            (bitcoinTicker as UiState.Success).ticker.price
+                        } else {
+                            ""
+                        },
+                        isLoading = !isSuccess
+                    )
+                }
+                if(etherTicker != UiState.Error){
+                    val isSuccess = etherTicker is UiState.Success
+                    CoinPriceBox(
+                        modifier = Modifier
+                            .padding(start = 4.dp, end = 12.dp, bottom = 8.dp)
+                            .weight(1f),
+                        name = "ETH/USD",
+                        price = if (isSuccess) {
+                            (etherTicker as UiState.Success).ticker.price
+                        } else {
+                            ""
+                        },
+                        isLoading = !isSuccess
+                    )
+                }
+            }
         }
 
         item {
