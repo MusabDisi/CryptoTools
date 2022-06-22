@@ -18,8 +18,10 @@ import com.dissiapps.crypto.data.remote.coinprice_websocket.CoinCapSocketManager
 import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Subscribe
 import com.dissiapps.crypto.data.remote.coinprice_websocket.models.Ticker
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -78,13 +80,16 @@ class NewsScreenViewModel @Inject constructor(
     }.flow.cachedIn(viewModelScope)
 
 
-    val news = if (_currenciesList.value.isEmpty()){
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val news = _currenciesList.flatMapLatest { lst ->
+        if (_currenciesList.value.isEmpty()) {
             cachedPager
-        }else{
+        } else {
             Pager(pagingConfig) {
-                NewsPagingSource(newsApi, _currenciesList.value)
+                NewsPagingSource(newsApi, lst)
             }.flow.cachedIn(viewModelScope)
         }
+    }
 
 //    override fun onCleared() {
 //        super.onCleared()

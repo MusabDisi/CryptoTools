@@ -66,7 +66,6 @@ class CoinCapSocketManager private constructor(
     private val coinCapWebSocketListener by lazy {
         object : CoinCapWebSocketListener() {
             override fun onMessage(webSocket: WebSocket, text: String) {
-                super.onMessage(webSocket, text)
                 externalScope.launch {
                     try {
                         val result = convertStringToModel(text)
