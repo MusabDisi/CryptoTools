@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.Arrangement.Absolute.SpaceBetween
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -105,7 +109,7 @@ fun SearchField(
             IconButton(
                 content = {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_arrow_back_24),
+                        imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null
                     )
                 },
@@ -119,7 +123,7 @@ fun SearchField(
                 modifier = Modifier.padding(end = 8.dp),
                 content = {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                        imageVector = Icons.Filled.Close,
                         contentDescription = null
                     )
                 },
@@ -169,7 +173,7 @@ fun SearchIcon(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_search_24),
+            imageVector = Icons.Filled.Search,
             tint = Color.Black,
             contentDescription = null
         )
@@ -250,7 +254,7 @@ fun SearchHistory(
                         .clickable {
                             onItemDeleteClicked(it)
                         },
-                    painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                    imageVector = Icons.Filled.Close,
                     contentDescription = null
                 )
             }

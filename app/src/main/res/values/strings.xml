@@ -31,4 +31,6 @@
     <string name="plz_enter_a_valid_code">please make sure you entered a valid code</string>
     <string name="search_history">Search History</string>
     <string name="clear_all">Clear all</string>
+    <string name="no_internet_warning">You Are Offline !</string>
+    <string name="requires_internet_toast">This feature requires internet connection!</string>
 </resources>

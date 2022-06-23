@@ -12,6 +12,7 @@ val Orange = Color(0xFFED7E00)
 val Yellow = Color(0xFFEDB200)
 val OffWhite = Color(0xFFFAF9F6)
 val VeryLightGray = Color(0xFFE9E9E9)
+val LightRed = Color(0xFFFF5454)
 
 val ShimmerColorShades = listOf(
     Color.LightGray.copy(0.9f),

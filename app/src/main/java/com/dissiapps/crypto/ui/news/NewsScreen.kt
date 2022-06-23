@@ -4,12 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +47,8 @@ import com.dissiapps.crypto.ui.common.MainTitleText
 import com.dissiapps.crypto.ui.navigation.NavigationPage
 import com.dissiapps.crypto.ui.news.NewsScreenViewModel.UiState
 import com.dissiapps.crypto.ui.theme.*
+import com.dissiapps.crypto.utils.connectivity.ConnectionState
+import com.dissiapps.crypto.utils.connectivity.currentConnectivityState
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -61,7 +68,7 @@ fun NewsScreen(
     val etherTicker by remember { viewModel.ethTicker }
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
     val isRefreshing = rememberSwipeRefreshState(false)
-    var loaded = false
+    val context = LocalContext.current
 
     SwipeRefresh(
         state = isRefreshing,
@@ -118,8 +125,12 @@ fun NewsScreen(
                         .padding(bottom = 16.dp, start = 12.dp, end = 12.dp),
                     text = if (currencyCode.isNotEmpty()) currencyCode[0] else null,
                     onClick = {
-                        navController.navigate(NavigationPage.SearchNewsPage.route) {
-                            launchSingleTop = true
+                        if (context.currentConnectivityState == ConnectionState.Available){
+                            navController.navigate(NavigationPage.SearchNewsPage.route) {
+                                launchSingleTop = true
+                            }
+                        }else{
+                            context.showOfflineToastMessage()
                         }
                     },
                     onClear = {
@@ -139,18 +150,11 @@ fun NewsScreen(
                         CircularProgressIndicator(color = MaterialTheme.colors.iconTint)
                     }
                 }
-                loaded = true
             } else {
-                if (lazyPagingItems.itemCount == 0 && loaded) {
-                    item {
-                        NoSearchResults()
-                    }
-                } else {
-                    items(lazyPagingItems) { item ->
-                        item ?: return@items
-                        NewsItem(newsResult = item)
-                        Divider(thickness = 1.dp)
-                    }
+                items(lazyPagingItems) { item ->
+                    item ?: return@items
+                    NewsItem(newsResult = item)
+                    Divider(thickness = 1.dp)
                 }
             }
 
@@ -167,6 +171,10 @@ fun NewsScreen(
             }
         }
     }
+}
+
+fun Context.showOfflineToastMessage() {
+    Toast.makeText(this, getString(R.string.requires_internet_toast), Toast.LENGTH_LONG).show()
 }
 
 @Preview(showBackground = true)
@@ -327,9 +335,7 @@ private fun CustomSearchBar(
         if (text == null)
             Icon(
                 modifier = Modifier.padding(end = 8.dp),
-                painter = painterResource(
-                    id = R.drawable.ic_search_24
-                ),
+                imageVector = Icons.Filled.Search,
                 tint = MaterialTheme.colors.newsSearchBarContent,
                 contentDescription = null
             )
@@ -348,9 +354,7 @@ private fun CustomSearchBar(
                     .clickable {
                         onClear()
                     },
-                painter = painterResource(
-                    id = R.drawable.ic_baseline_close_24
-                ),
+                imageVector = Icons.Filled.Close,
                 tint = MaterialTheme.colors.iconTint,
                 contentDescription = null
             )
