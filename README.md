@@ -5,8 +5,9 @@ Purose of study: play a little with Jetpack Compose
 
 ## Screenshots
 
-![Screenshot_20220623_162053|width=100px](https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png)
 
+| ![Screenshot_20220623_162053|width=100px](https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png) | ![Screenshot_20220623_162053|width=100px](https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png) | ![Screenshot_20220623_162053|width=100px](https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png) | ![Screenshot_20220623_162053|width=100px](https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png) |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ | ------------------------------------ |
 
 ## Video
 
