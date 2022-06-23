@@ -5,9 +5,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
-android {
+ android {
     compileSdk 32
-
     defaultConfig {
         applicationId "com.dissiapps.crypto"
         minSdk 21
@@ -21,9 +20,18 @@ android {
         }
     }
 
+    Properties localProperties = new Properties()
+    if (project.rootProject.file('local.properties').canRead()) {
+        localProperties.load(project.rootProject.file("local.properties").newDataInputStream())
+    }
+
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            buildConfigField("String", "NEWS_AUTH_TOKEN", localProperties['NEWS_AUTH_TOKEN'])
+        }
+        release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
