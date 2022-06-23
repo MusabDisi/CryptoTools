@@ -41,9 +41,7 @@ import com.dissiapps.crypto.data.models.news.Currency
 import com.dissiapps.crypto.ui.common.MainTitleText
 import com.dissiapps.crypto.ui.navigation.NavigationPage
 import com.dissiapps.crypto.ui.news.NewsScreenViewModel.UiState
-import com.dissiapps.crypto.ui.theme.OffWhite
-import com.dissiapps.crypto.ui.theme.VeryLightGray
-import com.dissiapps.crypto.ui.theme.Yellow
+import com.dissiapps.crypto.ui.theme.*
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -61,9 +59,9 @@ fun NewsScreen(
 
     val bitcoinTicker by remember { viewModel.btcTicker }
     val etherTicker by remember { viewModel.ethTicker }
-    var loaded = false
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
     val isRefreshing = rememberSwipeRefreshState(false)
+    var loaded = false
 
     SwipeRefresh(
         state = isRefreshing,
@@ -138,7 +136,7 @@ fun NewsScreen(
                             .padding(top = 16.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(color = Color.Black)
+                        CircularProgressIndicator(color = MaterialTheme.colors.iconTint)
                     }
                 }
                 loaded = true
@@ -163,7 +161,7 @@ fun NewsScreen(
                             .padding(vertical = 8.dp)
                             .fillMaxWidth()
                             .wrapContentWidth(Alignment.CenterHorizontally),
-                        color = Color.Black
+                        color = MaterialTheme.colors.iconTint
                     )
                 }
             }
@@ -322,7 +320,7 @@ private fun CustomSearchBar(
         modifier = modifier
             .clickable(onClick = onClick)
             .clip(RoundedCornerShape(15.dp))
-            .background(VeryLightGray)
+            .background(MaterialTheme.colors.newsSearchBarBackground)
             .padding(horizontal = 12.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -332,7 +330,7 @@ private fun CustomSearchBar(
                 painter = painterResource(
                     id = R.drawable.ic_search_24
                 ),
-                tint = Color.Gray,
+                tint = MaterialTheme.colors.newsSearchBarContent,
                 contentDescription = null
             )
         Text(
@@ -341,7 +339,7 @@ private fun CustomSearchBar(
             fontSize = 20.sp,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight(300),
-            color = if (text == null) Color.Gray else Color.Black
+            color = if (text == null) MaterialTheme.colors.newsSearchBarContent else Color.Black
         )
         if (text != null)
             Icon(
@@ -353,7 +351,7 @@ private fun CustomSearchBar(
                 painter = painterResource(
                     id = R.drawable.ic_baseline_close_24
                 ),
-                tint = Color.Black,
+                tint = MaterialTheme.colors.iconTint,
                 contentDescription = null
             )
     }

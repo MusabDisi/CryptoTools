@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dissiapps.crypto.R
 import com.dissiapps.crypto.ui.common.MainTitleText
+import com.dissiapps.crypto.ui.theme.iconTint
+import com.dissiapps.crypto.ui.theme.text
+import com.dissiapps.crypto.ui.theme.textInverted
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -231,7 +235,7 @@ fun NumberBox(text: String, title: String) {
 
 
 @Composable
-fun SimpleTabLayout(onIndexChanged: (Int) -> Unit){
+fun SimpleTabLayout(onIndexChanged: (Int) -> Unit) {
     val tabTitles = mutableListOf(
         stringResource(R.string.hourly),
         stringResource(R.string.daily),
@@ -246,7 +250,7 @@ fun SimpleTabLayout(onIndexChanged: (Int) -> Unit){
                 modifier = Modifier
                     .padding(start = 4.dp, end = 4.dp)
                     .clip(RoundedCornerShape(20.dp))
-                    .background(if (tabIndex == it) Color.Black else Color(0x99BBBBBB))
+                    .background(if (tabIndex == it) MaterialTheme.colors.iconTint else Color.LightGray)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
             ) {
                 Text(
@@ -257,9 +261,9 @@ fun SimpleTabLayout(onIndexChanged: (Int) -> Unit){
                     text = tabTitles[it],
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = if(tabIndex == it) Color.White else Color.Black)
+                    color = if (tabIndex == it) MaterialTheme.colors.textInverted else MaterialTheme.colors.text
+                )
             }
         }
     }
-
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.dissiapps.crypto.R
 import com.dissiapps.crypto.ui.common.MainTitleText
 import com.dissiapps.crypto.ui.theme.Orange
+import com.dissiapps.crypto.ui.theme.iconTint
 
 
 @Composable
@@ -31,14 +33,23 @@ fun FearGreedIndexScreen(viewModel: FGIndexViewModel = hiltViewModel()) {
     val index by remember { viewModel.index }
     val lastUpdated by remember { viewModel.lastUpdated }
     val classification by remember { viewModel.classification }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        MainTitleText(
+            modifier = Modifier.fillMaxWidth(),
+            mainText = stringResource(id = R.string.fgIndexTitle)
+        )
         if (state != FGIndexViewModel.UiState.SUCCESS) {
-            CircularProgressIndicator()
-        } else {
-            MainTitleText(modifier = Modifier.fillMaxWidth(), mainText = stringResource(id = R.string.fgIndexTitle))
+            Box(
+                modifier = Modifier.fillMaxWidth().weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colors.iconTint)
+            }
+        }else{
             IndexAndLabelColumn(index = index, classification = classification)
             GradiantScaleHorizontal(index = index.toInt())
             Row(
@@ -128,7 +139,7 @@ private fun GradiantScaleHorizontal(index: Int) {
                 .clip(ReversedTriangle())
                 .width(20.dp)
                 .height(20.dp)
-                .background(Color.Black)
+                .background(MaterialTheme.colors.iconTint)
                 .padding(bottom = 4.dp)
         )
         Box(

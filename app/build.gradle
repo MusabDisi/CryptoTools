@@ -28,7 +28,7 @@ plugins {
     buildTypes {
         debug {
             minifyEnabled false
-            buildConfigField("String", "NEWS_AUTH_TOKEN", localProperties['NEWS_AUTH_TOKEN'])
+            buildConfigField("String", "NEWS_AUTH_TOKEN", localProperties.getProperty('NEWS_AUTH_TOKEN', ''))
         }
         release {
             minifyEnabled true

@@ -25,40 +25,36 @@ fun BottomNavigationBar(navigationController: NavHostController) {
     )
     val navBackStackEntry by navigationController.currentBackStackEntryAsState()
     val selectedRoute = navBackStackEntry?.destination?.route
-    Log.e("TAG", "BottomNavigationBar: $selectedRoute")
-    if(navigationItems.any { selectedRoute.equals(it.route)})
-        Column {
-            Divider(thickness = 1.dp, color = Color.Gray)
-            BottomNavigation(
-                modifier = Modifier.height(
-                    dimensionResource(id = R.dimen.bottom_nav_bar_height)
-                ),
-                contentColor = Color.Gray,
-                backgroundColor = Color.White
-            ) {
-                navigationItems.forEach {
-                    BottomNavigationItem(
-                        selected = selectedRoute == it.route,
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = it.iconResourceId),
-                                contentDescription = stringResource(id = it.titleResourceId)
-                            )
-                        },
-                        label = { Text(text = stringResource(id = it.titleResourceId)) },
-                        selectedContentColor = Color.Black,
-                        alwaysShowLabel = selectedRoute == it.route,
-                        onClick = {
-                            navigationController.navigate(it.route) {
-                                popUpTo(navigationController.graph.startDestinationId){
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+
+    if (navigationItems.any { selectedRoute.equals(it.route) })
+        BottomNavigation(
+            modifier = Modifier.height(
+                dimensionResource(id = R.dimen.bottom_nav_bar_height)
+            ),
+            backgroundColor = MaterialTheme.colors.background,
+            elevation = 10.dp
+        ) {
+            navigationItems.forEach {
+                BottomNavigationItem(
+                    selected = selectedRoute == it.route,
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = it.iconResourceId),
+                            contentDescription = stringResource(id = it.titleResourceId)
+                        )
+                    },
+                    label = { Text(text = stringResource(id = it.titleResourceId)) },
+                    alwaysShowLabel = selectedRoute == it.route,
+                    onClick = {
+                        navigationController.navigate(it.route) {
+                            popUpTo(navigationController.graph.startDestinationId) {
+                                saveState = true
                             }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                    )
-                }
+                    }
+                )
             }
         }
 }

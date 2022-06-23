@@ -3,6 +3,9 @@ package com.dissiapps.crypto.utils
 import android.content.Context
 import com.dissiapps.crypto.R
 
+/*
+* not used
+* */
 class CryptoCodesSearch(
     context: Context
 ) {

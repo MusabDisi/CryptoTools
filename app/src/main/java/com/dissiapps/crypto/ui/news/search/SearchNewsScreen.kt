@@ -29,6 +29,8 @@ import androidx.navigation.NavController
 import com.dissiapps.crypto.R
 import com.dissiapps.crypto.data.local.news.search_history.SearchQuery
 import com.dissiapps.crypto.ui.navigation.NavigationItem
+import com.dissiapps.crypto.ui.theme.iconTint
+import com.dissiapps.crypto.ui.theme.text
 import com.dissiapps.crypto.utils.CryptoCodesSearch
 
 @Composable
@@ -36,10 +38,11 @@ fun SearchNewsScreen(
     navController: NavController,
     searchNewsViewModel: SearchNewsViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    val trie = remember { CryptoCodesSearch(context) }
-    val searchHistory by remember { searchNewsViewModel.searchHistory }
+//    val context = LocalContext.current
+//    val trie = remember { CryptoCodesSearch(context) }
 //    var suggestions by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    val searchHistory by remember { searchNewsViewModel.searchHistory }
 
     Column(Modifier.fillMaxSize()) {
         SearchField(
@@ -52,20 +55,16 @@ fun SearchNewsScreen(
                 searchString(navController, string)
             },
             onValueChanged = {
-//                try {
 //                    suggestions = trie.search(it)
-//                }catch (ex: Exception){
-//                    Log.e("TAG", "SearchNewsScreen: ${ex}", ex)
-//                }
             }
         )
 
         /*if (suggestions.isNotEmpty()){
             Suggestions(suggestionsList = suggestions, onItemClicked = {})
         }else */
-        if(searchHistory.isEmpty()){
+        if (searchHistory.isEmpty()) {
             SearchIcon(Modifier.padding(vertical = 24.dp))
-        }else{
+        } else {
             SearchHistory(
                 history = searchHistory,
                 onItemClicked = {
@@ -82,8 +81,8 @@ fun SearchNewsScreen(
     }
 }
 
-fun searchString(navController: NavController, string: String){
-    navController.navigate(NavigationItem.NewsScreenNav.createNavigationRoute(string)){
+fun searchString(navController: NavController, string: String) {
+    navController.navigate(NavigationItem.NewsScreenNav.createNavigationRoute(string)) {
         popUpTo(navController.graph.startDestinationId)
     }
 }
@@ -102,37 +101,51 @@ fun SearchField(
         value = text,
         placeholder = { Text(text = stringResource(R.string.search_example), fontSize = 18.sp) },
         maxLines = 1,
-        leadingIcon = { IconButton(
-            content = { Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_back_24),
-                contentDescription = null
-            ) },
-            onClick = {
-                onBackClicked()
-            }
-        ) },
-        trailingIcon = { IconButton(
-            modifier = Modifier.padding(end = 8.dp),
-            content = { Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24), contentDescription = null) },
-            onClick = {
-                text = ""
-            }
-        ) },
+        leadingIcon = {
+            IconButton(
+                content = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_back_24),
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    onBackClicked()
+                }
+            )
+        },
+        trailingIcon = {
+            IconButton(
+                modifier = Modifier.padding(end = 8.dp),
+                content = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_close_24),
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    text = ""
+                }
+            )
+        },
         textStyle = TextStyle(
             fontSize = 18.sp,
             fontFamily = FontFamily.SansSerif,
             fontWeight = FontWeight(400)
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Color.Black,
-            backgroundColor = Color.White,
-            leadingIconColor = Color.Black,
-            trailingIconColor = Color.Black,
-            cursorColor = Color.Black,
+            textColor = MaterialTheme.colors.text,
+            backgroundColor = MaterialTheme.colors.background,
+            leadingIconColor = MaterialTheme.colors.iconTint,
+            trailingIconColor = MaterialTheme.colors.iconTint,
+            cursorColor = MaterialTheme.colors.text,
             focusedBorderColor = Color(0x99000000)
         ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search, capitalization = KeyboardCapitalization.Characters),
-        keyboardActions = KeyboardActions (onSearch = {
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search,
+            capitalization = KeyboardCapitalization.Characters
+        ),
+        keyboardActions = KeyboardActions(onSearch = {
             onSearch(text)
         }),
         onValueChange = {
@@ -141,14 +154,14 @@ fun SearchField(
         },
     )
 
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SearchIcon(modifier: Modifier = Modifier){
+fun SearchIcon(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .wrapContentHeight()
@@ -170,10 +183,10 @@ fun SearchIcon(modifier: Modifier = Modifier){
 
 @Preview(showBackground = true)
 @Composable
-fun SearchHistoryPreview(){
+fun SearchHistoryPreview() {
     SearchHistory(
-        history = listOf(SearchQuery("BTC",0L),SearchQuery("BTC",0L)),
-        onItemClicked =  {},
+        history = listOf(SearchQuery("BTC", 0L), SearchQuery("BTC", 0L)),
+        onItemClicked = {},
         onItemDeleteClicked = {},
         onDeleteAllClicked = {}
     )
@@ -231,11 +244,12 @@ fun SearchHistory(
                     letterSpacing = 1.2.sp,
                     fontWeight = FontWeight.W400
                 )
-                Icon(modifier = Modifier
-                    .padding(end = 12.dp)
-                    .clickable {
-                        onItemDeleteClicked(it)
-                    },
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .clickable {
+                            onItemDeleteClicked(it)
+                        },
                     painter = painterResource(id = R.drawable.ic_baseline_close_24),
                     contentDescription = null
                 )
