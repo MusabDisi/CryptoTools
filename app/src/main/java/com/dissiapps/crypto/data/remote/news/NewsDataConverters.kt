@@ -16,5 +16,6 @@ fun convertToNewsModel(newData: List<NewsResult>?): List<NewsModel> {
 }
 
 private fun createUrl(newData: NewsResult): String {
-    return newData.domain + "/" + newData.slug.lowercase() + "/"
+//    return newData.domain + "/" + newData.slug.lowercase() + "/"
+    return newData.url
 }

@@ -44,6 +44,8 @@ import com.dissiapps.crypto.ui.news.NewsScreenViewModel.UiState
 import com.dissiapps.crypto.ui.theme.OffWhite
 import com.dissiapps.crypto.ui.theme.VeryLightGray
 import com.dissiapps.crypto.ui.theme.Yellow
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @ExperimentalPagingApi
 @Composable
@@ -61,103 +63,109 @@ fun NewsScreen(
     val etherTicker by remember { viewModel.ethTicker }
     var loaded = false
     val lazyPagingItems = viewModel.news.collectAsLazyPagingItems()
+    val isRefreshing = rememberSwipeRefreshState(false)
 
-    LazyColumn(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.bottom_nav_bar_height))) {
+    SwipeRefresh(
+        state = isRefreshing,
+        onRefresh = { lazyPagingItems.refresh() }
+    ) {
+        LazyColumn(modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.bottom_nav_bar_height))) {
 
-        item {
-            MainTitleText(
-                mainText = stringResource(id = R.string.NewsTitle),
-                descText = stringResource(id = R.string.NewsDesc)
-            )
-        }
-
-        item {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                if(bitcoinTicker != UiState.Error){
-                    val isSuccess = bitcoinTicker is UiState.Success
-                    CoinPriceBox(
-                        modifier = Modifier
-                            .padding(start = 12.dp, end = 4.dp, bottom = 8.dp)
-                            .weight(1f),
-                        name = "BTC/USD",
-                        price = if (isSuccess) {
-                            (bitcoinTicker as UiState.Success).ticker.price
-                        } else {
-                            "0"
-                        },
-                        isLoading = !isSuccess
-                    )
-                }
-                if(etherTicker != UiState.Error){
-                    val isSuccess = etherTicker is UiState.Success
-                    CoinPriceBox(
-                        modifier = Modifier
-                            .padding(start = 4.dp, end = 12.dp, bottom = 8.dp)
-                            .weight(1f),
-                        name = "ETH/USD",
-                        price = if (isSuccess) {
-                            (etherTicker as UiState.Success).ticker.price
-                        } else {
-                            "0"
-                        },
-                        isLoading = !isSuccess
-                    )
-                }
-            }
-        }
-
-        item {
-            CustomSearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp, start = 12.dp, end = 12.dp),
-                text = if (currencyCode.isNotEmpty()) currencyCode[0] else null,
-                onClick = {
-                    navController.navigate(NavigationPage.SearchNewsPage.route) {
-                        launchSingleTop = true
-                    }
-                },
-                onClear = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color.Black)
-                }
-            }
-            loaded = true
-        } else {
-            if (lazyPagingItems.itemCount == 0 && loaded) {
-                item {
-                    NoSearchResults()
-                }
-            } else {
-                items(lazyPagingItems) { item ->
-                    item ?: return@items
-                    NewsItem(newsResult = item)
-                    Divider(thickness = 1.dp)
-                }
-            }
-        }
-
-        if (lazyPagingItems.loadState.append == LoadState.Loading) {
-            item {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                        .wrapContentWidth(Alignment.CenterHorizontally),
-                    color = Color.Black
+                MainTitleText(
+                    mainText = stringResource(id = R.string.NewsTitle),
+                    descText = stringResource(id = R.string.NewsDesc)
                 )
+            }
+
+            item {
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    if (bitcoinTicker != UiState.Error) {
+                        val isSuccess = bitcoinTicker is UiState.Success
+                        CoinPriceBox(
+                            modifier = Modifier
+                                .padding(start = 12.dp, end = 4.dp, bottom = 8.dp)
+                                .weight(1f),
+                            name = "BTC/USD",
+                            price = if (isSuccess) {
+                                (bitcoinTicker as UiState.Success).ticker.price
+                            } else {
+                                "0"
+                            },
+                            isLoading = !isSuccess
+                        )
+                    }
+                    if (etherTicker != UiState.Error) {
+                        val isSuccess = etherTicker is UiState.Success
+                        CoinPriceBox(
+                            modifier = Modifier
+                                .padding(start = 4.dp, end = 12.dp, bottom = 8.dp)
+                                .weight(1f),
+                            name = "ETH/USD",
+                            price = if (isSuccess) {
+                                (etherTicker as UiState.Success).ticker.price
+                            } else {
+                                "0"
+                            },
+                            isLoading = !isSuccess
+                        )
+                    }
+                }
+            }
+
+            item {
+                CustomSearchBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp, start = 12.dp, end = 12.dp),
+                    text = if (currencyCode.isNotEmpty()) currencyCode[0] else null,
+                    onClick = {
+                        navController.navigate(NavigationPage.SearchNewsPage.route) {
+                            launchSingleTop = true
+                        }
+                    },
+                    onClear = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            if (lazyPagingItems.loadState.refresh == LoadState.Loading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Color.Black)
+                    }
+                }
+                loaded = true
+            } else {
+                if (lazyPagingItems.itemCount == 0 && loaded) {
+                    item {
+                        NoSearchResults()
+                    }
+                } else {
+                    items(lazyPagingItems) { item ->
+                        item ?: return@items
+                        NewsItem(newsResult = item)
+                        Divider(thickness = 1.dp)
+                    }
+                }
+            }
+
+            if (lazyPagingItems.loadState.append == LoadState.Loading) {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.CenterHorizontally),
+                        color = Color.Black
+                    )
+                }
             }
         }
     }
@@ -261,7 +269,7 @@ private fun NewsItem(newsResult: NewsModel) {
 }
 
 @Composable
-fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>, maxSize: Int = 2) {
+private fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>, maxSize: Int = 2) {
     val list = if (currencies.size > maxSize) currencies.subList(0, maxSize) else currencies
     Row(
         modifier = modifier,
@@ -286,7 +294,7 @@ fun CoinsRow(modifier: Modifier = Modifier, currencies: List<Currency>, maxSize:
 }
 
 @Composable
-fun CoinHolder(modifier: Modifier = Modifier, name: String) {
+private fun CoinHolder(modifier: Modifier = Modifier, name: String) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
@@ -299,12 +307,12 @@ fun CoinHolder(modifier: Modifier = Modifier, name: String) {
 
 @Preview
 @Composable
-fun CustomSearchBarPreview(){
+private  fun CustomSearchBarPreview(){
     CustomSearchBar(text = "txt", onClick = {}){}
 }
 
 @Composable
-fun CustomSearchBar(
+private fun CustomSearchBar(
     modifier: Modifier = Modifier,
     text: String?,
     onClick: () -> Unit,
@@ -352,7 +360,7 @@ fun CustomSearchBar(
 }
 
 @Composable
-fun NoSearchResults(modifier: Modifier = Modifier){
+private fun NoSearchResults(modifier: Modifier = Modifier){
     Column(
         modifier = modifier
             .wrapContentHeight()
