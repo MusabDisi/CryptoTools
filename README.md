@@ -6,7 +6,7 @@ Purose of study: play a little with Jetpack Compose!
 
 ## Screenshots
 
-| <img src="https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png" width=80%/> | <img src="https://user-images.githubusercontent.com/52013876/175313076-a9852673-852d-46d8-b5c9-77edb4d1f175.png" width=80%/> | <img src="https://user-images.githubusercontent.com/52013876/175313078-810906b2-4ff6-4b79-bdfa-ce1fb7f0d9be.png" width=80%/> | <img src="https://user-images.githubusercontent.com/52013876/175313083-82207a1d-589f-4cbc-b4db-bf3513d60bd3.png" width=80%/> | <img src="https://user-images.githubusercontent.com/52013876/175946582-4b2072c1-b71e-4f70-8fb3-2e6e9cec0a73.png" width=80%/> |
+| <img src="https://user-images.githubusercontent.com/52013876/175310529-be8d106c-596d-42da-9c95-87b87545e161.png" width=100%/> | <img src="https://user-images.githubusercontent.com/52013876/175313076-a9852673-852d-46d8-b5c9-77edb4d1f175.png" width=100%/> | <img src="https://user-images.githubusercontent.com/52013876/175313078-810906b2-4ff6-4b79-bdfa-ce1fb7f0d9be.png" width=100%/> | <img src="https://user-images.githubusercontent.com/52013876/175313083-82207a1d-589f-4cbc-b4db-bf3513d60bd3.png" width=100%/> | <img src="https://user-images.githubusercontent.com/52013876/175946582-4b2072c1-b71e-4f70-8fb3-2e6e9cec0a73.png" width=100%/> |
 | --------------- | --------------- | --------------- | --------------- | --------------- |
 
 ## Features
